@@ -54,17 +54,16 @@ export class AnyWebsitesApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: '={{$credentials.baseUrl}}',
-			url: '/health',
+			url: '/api/content',
 			method: 'GET',
 			skipSslCertificateValidation: '={{$credentials.allowUnauthorizedCerts}}',
 		},
 		rules: [
 			{
-				type: 'responseSuccessBody',
+				type: 'responseCode',
 				properties: {
-					message: 'Authentication test successful',
-					key: 'status',
-					value: 'ok',
+					value: 200,
+					message: 'Authentication successful',
 				},
 			},
 		],

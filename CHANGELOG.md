@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2024-06-27
+
+### Fixed
+- **Credential Testing**: Fixed credential test configuration that was causing authentication validation issues
+  - Changed test endpoint from `/health` to `/api/content` (existing API endpoint)
+  - Fixed test rule configuration to use proper `responseCode` type with required `message` field
+  - Resolved TypeScript compilation errors in credential test rules
+  - Updated unit tests to reflect new test configuration
+
+### Technical Improvements
+- Improved credential validation reliability
+- Better error handling for authentication test failures
+- Enhanced type safety for credential test rules
+
 ## [1.0.1] - 2024-06-27
 
 ### Fixed
