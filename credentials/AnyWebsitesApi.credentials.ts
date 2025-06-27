@@ -31,6 +31,13 @@ export class AnyWebsitesApi implements ICredentialType {
 			description: 'Your AnyWebsites API key. You can find this in your user settings.',
 			required: true,
 		},
+		{
+			displayName: 'Ignore SSL Issues',
+			name: 'allowUnauthorizedCerts',
+			type: 'boolean',
+			default: true,
+			description: 'Whether to ignore SSL certificate errors. Enable this for self-signed certificates or development environments.',
+		},
 	];
 
 	// Use API key authentication
@@ -49,6 +56,7 @@ export class AnyWebsitesApi implements ICredentialType {
 			baseURL: '={{$credentials.baseUrl}}',
 			url: '/health',
 			method: 'GET',
+			skipSslCertificateValidation: '={{$credentials.allowUnauthorizedCerts}}',
 		},
 		rules: [
 			{

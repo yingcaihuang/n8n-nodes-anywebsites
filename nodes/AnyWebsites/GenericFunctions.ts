@@ -30,6 +30,7 @@ export async function anyWebsitesApiRequest(
 		qs,
 		url: `${credentials.baseUrl}${endpoint}`,
 		json: true,
+		skipSslCertificateValidation: credentials.allowUnauthorizedCerts as boolean,
 	};
 
 	// Remove empty body for GET and DELETE requests

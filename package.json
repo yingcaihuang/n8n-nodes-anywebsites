@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-anywebsites",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "n8n node for AnyWebsites HTML hosting service",
   "keywords": [
     "n8n-community-node-package",

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2024-06-27
+
+### Fixed
+- **SVG Icon Display**: Fixed SVG icon path issue that prevented node icon from displaying correctly
+  - Updated gulpfile.js to preserve directory structure when copying SVG files
+  - SVG files now correctly placed in `dist/nodes/AnyWebsites/` directory
+
+### Added
+- **SSL Certificate Validation Control**: Added option to ignore SSL certificate validation
+  - New "Ignore SSL Issues" toggle in credentials configuration (enabled by default)
+  - Useful for self-signed certificates and development environments
+  - Applied to both API requests and credential testing
+
+### Technical Improvements
+- Enhanced credential testing with SSL validation control
+- Updated unit tests to cover new SSL option
+- Improved build process for proper asset handling
+
 ## [1.0.0] - 2024-06-27
 
 ### Added
