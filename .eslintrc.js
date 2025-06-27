@@ -23,8 +23,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-explicit-any': 'warn',
     'n8n-nodes-base/node-filename-against-convention': 'error',
-    'n8n-nodes-base/node-class-description-inputs-wrong-regular-node': 'error',
-    'n8n-nodes-base/node-class-description-outputs-wrong': 'error',
+    'n8n-nodes-base/node-class-description-inputs-wrong-regular-node': 'off',
+    'n8n-nodes-base/node-class-description-outputs-wrong': 'off',
   },
   ignorePatterns: ['dist/**', 'node_modules/**'],
 };

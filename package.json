@@ -30,7 +30,7 @@
     "format": "prettier nodes credentials --write",
     "lint": "eslint \"nodes/**/*.ts\" \"credentials/**/*.ts\" --ignore-pattern \"**/*.test.ts\"",
     "lintfix": "eslint \"nodes/**/*.ts\" \"credentials/**/*.ts\" --ignore-pattern \"**/*.test.ts\" --fix",
-    "prepublishOnly": "npm run build && npm run lint -o .eslintcache && npm test",
+    "prepublishOnly": "npm run build && npm run lint && npm test",
     "test": "jest"
   },
   "files": [
