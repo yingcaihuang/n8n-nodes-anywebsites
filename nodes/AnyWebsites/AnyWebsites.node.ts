@@ -3,8 +3,8 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
-	NodeOperationError,
 	NodeConnectionType,
+	NodeOperationError,
 } from 'n8n-workflow';
 
 import { anyWebsitesApiRequest } from './GenericFunctions';

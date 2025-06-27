@@ -11,30 +11,33 @@
     "website"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/your-username/n8n-nodes-anywebsites",
+  "homepage": "https://github.com/anywebsites/n8n-nodes-anywebsites",
   "author": {
-    "name": "Your Name",
-    "email": "your.email@example.com"
+    "name": "AnyWebsites Team",
+    "email": "support@anywebsites.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-username/n8n-nodes-anywebsites.git"
+    "url": "git+https://github.com/anywebsites/n8n-nodes-anywebsites.git"
   },
   "engines": {
     "node": ">=18.10"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc && gulp build:icons",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
-    "lint": "eslint nodes credentials package.json",
-    "lintfix": "eslint nodes credentials package.json --fix",
+    "lint": "eslint \"nodes/**/*.ts\" \"credentials/**/*.ts\" --ignore-pattern \"**/*.test.ts\"",
+    "lintfix": "eslint \"nodes/**/*.ts\" \"credentials/**/*.ts\" --ignore-pattern \"**/*.test.ts\" --fix",
     "prepublishOnly": "npm run build && npm run lint -o .eslintcache && npm test",
     "test": "jest"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
