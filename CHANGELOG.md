@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2024-06-27
+
+### Fixed
+- **Authentication Method**: Changed from X-API-Key header to Bearer token authentication
+  - Updated credential authentication to use `Authorization: Bearer <token>` header
+  - Fixed API requests to match actual AnyWebsites API authentication requirements
+  - Updated GenericFunctions to use Bearer token instead of X-API-Key
+  - This resolves "Authorization header required" and "Invalid token" errors
+
+### Technical Improvements
+- Updated unit tests to reflect new authentication method
+- Improved API compatibility with actual AnyWebsites service
+- Better alignment with standard Bearer token authentication practices
+
+### Breaking Changes
+- **Authentication**: Existing credentials may need to be reconfigured
+- API Key format should be compatible with Bearer token authentication
+
 ## [1.0.2] - 2024-06-27
 
 ### Fixed

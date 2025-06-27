@@ -24,7 +24,7 @@ export async function anyWebsitesApiRequest(
 		method,
 		headers: {
 			'Content-Type': 'application/json',
-			'X-API-Key': credentials.apiKey as string,
+			'Authorization': `Bearer ${credentials.apiKey as string}`,
 		},
 		body,
 		qs,
