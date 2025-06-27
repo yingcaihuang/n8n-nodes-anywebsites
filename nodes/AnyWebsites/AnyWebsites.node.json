@@ -1,0 +1,19 @@
+{
+  "node": "n8n-nodes-anywebsites.anyWebsites",
+  "nodeVersion": "1.0.0",
+  "codexVersion": "1.0.0",
+  "categories": ["Development", "Data & Storage"],
+  "resources": {
+    "credentialDocumentation": [
+      {
+        "url": "https://anywebsites.com/docs/api-authentication"
+      }
+    ],
+    "primaryDocumentation": [
+      {
+        "url": "https://anywebsites.com/docs"
+      }
+    ]
+  },
+  "alias": ["HTML", "Website", "Hosting", "Content Management"]
+}
