@@ -1,5 +1,4 @@
 import {
-	IAuthenticateGeneric,
 	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
@@ -20,15 +19,24 @@ export class AnyWebsitesApi implements ICredentialType {
 			required: true,
 		},
 		{
-			displayName: 'API Key',
-			name: 'apiKey',
+			displayName: 'Username',
+			name: 'username',
+			type: 'string',
+			default: '',
+			placeholder: 'your_username',
+			description: 'Your AnyWebsites username',
+			required: true,
+		},
+		{
+			displayName: 'Password',
+			name: 'password',
 			type: 'string',
 			typeOptions: {
 				password: true,
 			},
 			default: '',
-			placeholder: 'ak_1234567890abcdef',
-			description: 'Your AnyWebsites API key. You can find this in your user settings.',
+			placeholder: 'your_password',
+			description: 'Your AnyWebsites password',
 			required: true,
 		},
 		{
@@ -40,22 +48,18 @@ export class AnyWebsitesApi implements ICredentialType {
 		},
 	];
 
-	// Use Bearer token authentication
-	authenticate: IAuthenticateGeneric = {
-		type: 'generic',
-		properties: {
-			headers: {
-				'Authorization': '=Bearer {{$credentials.apiKey}}',
-			},
-		},
-	};
+	// No authentication here - will be handled in GenericFunctions
 
-	// Test the credentials
+	// Test the credentials by attempting login
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: '={{$credentials.baseUrl}}',
-			url: '/api/content',
-			method: 'GET',
+			url: '/api/auth/login',
+			method: 'POST',
+			body: {
+				username: '={{$credentials.username}}',
+				password: '={{$credentials.password}}',
+			},
 			skipSslCertificateValidation: '={{$credentials.allowUnauthorizedCerts}}',
 		},
 		rules: [
@@ -63,7 +67,7 @@ export class AnyWebsitesApi implements ICredentialType {
 				type: 'responseCode',
 				properties: {
 					value: 200,
-					message: 'Authentication successful',
+					message: 'Login successful',
 				},
 			},
 		],

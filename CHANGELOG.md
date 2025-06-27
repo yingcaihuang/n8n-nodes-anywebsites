@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2024-06-27
+
+### 🔄 Major Authentication Refactor
+
+#### Changed
+- **Authentication Method**: Complete overhaul from API Key to JWT Token authentication
+  - Replaced API Key credentials with Username/Password login
+  - Implemented automatic JWT token acquisition through `/api/auth/login` endpoint
+  - Added intelligent token caching with automatic refresh on expiry
+  - JWT tokens are cached for 1 hour with 5-minute early refresh buffer
+
+#### Added
+- **Login Flow**: Automatic login process before API calls
+  - Username and password credential fields
+  - JWT token management with caching
+  - Automatic token refresh on 401 errors
+  - Better error handling for authentication failures
+
+#### Fixed
+- **API Compatibility**: Now fully compatible with actual AnyWebsites API
+  - Matches the authentication flow used in Go reference implementation
+  - Proper JWT Bearer token authentication for all API calls
+  - Correct credential testing using login endpoint
+
+#### Technical Improvements
+- Enhanced GenericFunctions with JWT token management
+- Improved error handling with automatic retry on token expiry
+- Better credential validation through actual login attempt
+- Updated unit tests to reflect new authentication model
+
+#### Breaking Changes
+- **Credentials**: Existing API Key credentials are no longer valid
+- **Setup**: Users must reconfigure with Username/Password instead of API Key
+- **Authentication**: All API calls now use JWT tokens instead of API Keys
+
+#### Verified Functionality
+- ✅ Login with username/password
+- ✅ JWT token acquisition and caching
+- ✅ Content upload with authentication
+- ✅ Content listing with authentication
+- ✅ Automatic token refresh on expiry
+- ✅ SSL certificate validation control
+
 ## [1.0.3] - 2024-06-27
 
 ### Fixed

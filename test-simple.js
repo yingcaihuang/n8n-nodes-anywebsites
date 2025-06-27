@@ -9,7 +9,8 @@ const https = require('https');
 // Test configuration (matching Go code exactly)
 const TEST_CONFIG = {
   baseUrl: 'https://localhost:8443',
-  apiKey: '1e278ff1-881a-47e6-ad8c-f779e715'
+  username: 'betty',
+  password: '123.com'
 };
 
 // Create HTTPS agent that ignores SSL certificates
@@ -18,10 +19,82 @@ const httpsAgent = new https.Agent({
 });
 
 /**
+ * Login and get JWT token
+ */
+async function login() {
+  console.log('🔐 Testing login...');
+
+  const loginData = {
+    username: TEST_CONFIG.username,
+    password: TEST_CONFIG.password
+  };
+
+  return new Promise((resolve, reject) => {
+    const postData = JSON.stringify(loginData);
+
+    const options = {
+      hostname: 'localhost',
+      port: 8443,
+      path: '/api/auth/login',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(postData)
+      },
+      agent: httpsAgent
+    };
+
+    console.log('📤 发送登录请求...');
+
+    const req = https.request(options, (res) => {
+      let body = '';
+
+      res.on('data', (chunk) => {
+        body += chunk;
+      });
+
+      res.on('end', () => {
+        console.log(`📊 登录响应状态: ${res.statusCode} ${res.statusMessage}`);
+
+        try {
+          const result = JSON.parse(body);
+
+          if (res.statusCode === 200) {
+            console.log('✅ 登录成功!');
+            console.log(`👤 用户: ${result.user.username} (管理员: ${result.user.is_admin})`);
+            resolve(result.access_token);
+          } else {
+            console.log('❌ 登录失败');
+            console.log('📄 响应:', result);
+            reject(new Error(`Login failed: ${result.error || body}`));
+          }
+        } catch (error) {
+          console.log('📄 原始响应:', body);
+          reject(new Error(`HTTP ${res.statusCode}: ${body}`));
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      console.log('❌ 登录请求错误:', error.message);
+      reject(error);
+    });
+
+    req.setTimeout(10000, () => {
+      req.destroy();
+      reject(new Error('登录请求超时'));
+    });
+
+    req.write(postData);
+    req.end();
+  });
+}
+
+/**
  * Test content upload (matching Go code behavior)
  */
-async function testUpload() {
-  console.log('🚀 Testing content upload (mimicking Go code)...');
+async function testUpload(token) {
+  console.log('\n🚀 Testing content upload (mimicking Go code)...');
   
   const testContent = {
     title: 'n8n Test Article',
@@ -73,7 +146,7 @@ async function testUpload() {
         <h2>📋 测试信息</h2>
         <ul>
             <li><strong>创建时间：</strong> ${new Date().toLocaleString('zh-CN')}</li>
-            <li><strong>API Key：</strong> ${TEST_CONFIG.apiKey.substring(0, 8)}...</li>
+            <li><strong>用户：</strong> ${TEST_CONFIG.username}</li>
             <li><strong>节点版本：</strong> 1.0.2</li>
             <li><strong>测试类型：</strong> 本地功能测试</li>
         </ul>
@@ -111,14 +184,14 @@ async function testUpload() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${TEST_CONFIG.apiKey}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Length': Buffer.byteLength(postData)
       },
       agent: httpsAgent
     };
 
     console.log('📤 发送请求到:', `${TEST_CONFIG.baseUrl}/api/content/upload`);
-    console.log('🔑 使用 API Key:', TEST_CONFIG.apiKey.substring(0, 8) + '...');
+    console.log('🔑 使用 Token:', token.substring(0, 20) + '...');
 
     const req = https.request(options, (res) => {
       let body = '';
@@ -173,7 +246,7 @@ async function testUpload() {
 /**
  * Test getting content list
  */
-async function testGetList() {
+async function testGetList(token) {
   console.log('\n📋 Testing content list...');
   
   return new Promise((resolve, reject) => {
@@ -184,7 +257,7 @@ async function testGetList() {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${TEST_CONFIG.apiKey}`
+        'Authorization': `Bearer ${token}`
       },
       agent: httpsAgent
     };
@@ -241,15 +314,18 @@ async function runTests() {
   console.log('🚀 AnyWebsites API 简单测试');
   console.log('=' .repeat(50));
   console.log(`📍 Base URL: ${TEST_CONFIG.baseUrl}`);
-  console.log(`🔑 API Key: ${TEST_CONFIG.apiKey.substring(0, 8)}...`);
+  console.log(`👤 用户: ${TEST_CONFIG.username}`);
   console.log('=' .repeat(50));
   
   try {
-    // Test 1: Upload content
-    await testUpload();
-    
-    // Test 2: Get content list
-    await testGetList();
+    // Test 1: Login
+    const token = await login();
+
+    // Test 2: Upload content
+    await testUpload(token);
+
+    // Test 3: Get content list
+    await testGetList(token);
     
     console.log('\n🎉 所有测试完成!');
     console.log('✅ n8n 节点应该可以正常工作了。');
@@ -257,10 +333,10 @@ async function runTests() {
   } catch (error) {
     console.log('\n❌ 测试失败:', error.message);
     console.log('\n🔍 可能的问题:');
-    console.log('   1. API Key 无效或已过期');
+    console.log('   1. 用户名或密码错误');
     console.log('   2. AnyWebsites 服务未运行');
     console.log('   3. 网络连接问题');
-    console.log('   4. API 端点或认证方式变更');
+    console.log('   4. 登录API端点变更');
     
     process.exit(1);
   }
