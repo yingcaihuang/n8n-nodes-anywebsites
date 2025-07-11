@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  n8n-anywebsites:
+    build: .
+    container_name: n8n-anywebsites
+    ports:
+      - "5678:5678"
+    environment:
+      # n8n 基础配置
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=password
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      
+      # 自定义节点配置
+      - N8N_CUSTOM_EXTENSIONS=/home/node/.n8n/nodes
+      - N8N_NODES_INCLUDE=n8n-nodes-anywebsites
+      
+      # 日志配置
+      - N8N_LOG_LEVEL=info
+      - N8N_LOG_OUTPUT=console
+      
+      # 工作流配置
+      - EXECUTIONS_PROCESS=main
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=all
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=all
+      - EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=true
+      
+    volumes:
+      # 持久化 n8n 数据
+      - n8n_data:/home/node/.n8n
+      
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  n8n_data:
+    driver: local
